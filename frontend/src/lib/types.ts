@@ -86,7 +86,7 @@ export interface RevisionClip {
   out_end_frame: number
 }
 
-/** Перестановка куска в версии (step-29): все оставленные кадры файла из
+/** Перестановка куска в версии: все оставленные кадры файла из
  *  [src_start_us, src_end_us) идут подряд после момента target_src_us (after)
  *  или перед ним (before); где кусок в ролике и номера трёх его стыков */
 export interface RevisionMove {

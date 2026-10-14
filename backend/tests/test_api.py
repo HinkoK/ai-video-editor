@@ -234,7 +234,7 @@ def test_authors_format_settings(client, project):
 
 
 def test_move_through_http(client, project):
-    """Перестановка по HTTP (step-29): Claude — по месту исходника, автор — по
+    """Перестановка по HTTP: Claude — по месту исходника, автор — по
     кадру под курсором; у стыков версии — вид cut или move."""
     pid, cam = project["id"], project["cam"]
     client.post(f"/api/projects/{pid}/settings", headers=USER, json={"agent_mode": "apply"})

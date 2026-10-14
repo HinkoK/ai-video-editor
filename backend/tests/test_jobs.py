@@ -379,7 +379,7 @@ def test_storage_usage_and_cleaning(conn, ws, pr):
 
 
 def test_export_of_a_moved_piece_is_verified_at_its_joints(conn, ws, pr):
-    """Перестановка (step-29): экспорт версии с переставленным куском — кадры
+    """Перестановка: экспорт версии с переставленным куском — кадры
     по номерам как в версии, сверка проходит, три стыка перестановки в ней."""
     prop = store.create_proposal(
         conn, pr.id, base_revision_id=pr.rev, pass_="cleanup", rationale="перестановка", policy_version="t",

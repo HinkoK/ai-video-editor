@@ -176,7 +176,7 @@ READ_MARGIN = Fraction(1)
 def input_args(src: ProbeResult, run_: list[PlacedClip], fps: Fraction) -> list[str]:
     """Перемотка к первому кадру серии и предел чтения: дальше её последнего
     кадра файл не читается. Без предела пробный ролик в 6 с из начала часовой
-    записи читал её до конца — почти минуту (найдено на записи автора)."""
+    записи читал её до конца — почти минуту (найдено на настоящей записи)."""
     first = run_[0].src_start_frame
     span = Fraction(run_[-1].src_end_frame - first, 1) / fps + READ_MARGIN
     return [*_seek_args(src, first, fps), "-t", f"{float(span):.6f}"]
@@ -405,7 +405,7 @@ def _render_by_shots(edl: CompiledEdl, media: dict[str, ProbeResult], dst: Path,
 
 
 def _pan_in(k: int, below: str, start: int, elapsed: int, pan: int, width: int) -> str:
-    """Переход PAN (просьба автора 14.10): за pan кадров всё, что под графикой
+    """Переход PAN: за pan кадров всё, что под графикой
     (лицо, экран, прошлая графика), уезжает влево, графика въезжает справа
     вплотную к нему; пока едут — размыты по горизонтали, сильнее в середине.
     Плавно в начале и в конце (smoothstep). start — первый кадр графики в этой

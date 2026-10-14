@@ -468,7 +468,7 @@ export function Monitor({ project, revision, rate, playhead, onTime, handle, lay
         <span className="player-time">{fmtUs(frameToUs(playhead, rate), 1)} <span>/ {fmtUs(revision.duration_us, 1)}</span></span>
         {at && <span className="mono faint tl-src">{assetRef(project.assets, at.clip.asset_id)} {fmtUs(at.us, 1)}</span>}
         {/* Текст графики — в этой же строке, не отдельной под ней: отдельная появлялась
-            и пропадала с курсором и двигала таймлайн вниз (просьба автора 13.10) */}
+            и пропадала с курсором и двигала таймлайн вниз */}
         {graphic && editable && !active && <GraphicFields key={graphic.id} item={graphic} onSave={async (props) => {
           try {
             await api.patchGraphic(pid, graphic.id, props)

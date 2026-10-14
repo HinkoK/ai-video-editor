@@ -8,7 +8,7 @@
 // элементу на кадр.
 // Ручной монтаж как в Premiere Pro (lib/edit.ts): лезвие, выделение кусков,
 // Q/W, метки I/O, удаление со сдвигом, отмена — теми же клавишами;
-// перестановка (step-29) — ⌘X «взять кусок», ⌘⇧V «вставить со сдвигом».
+// перестановка — ⌘X «взять кусок», ⌘⇧V «вставить со сдвигом».
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Tab } from '../App'
 import { ErrorText, Select, StatePanel } from '../components/common'

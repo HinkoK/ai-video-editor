@@ -96,7 +96,7 @@ def coarse_lag(main: np.ndarray, cam: np.ndarray) -> tuple[int, float]:
     if len(em) < 100 or len(ec) < 100:
         return 0, 0.0
     # PHAT и здесь: у настоящей записи без него пик широкий (острота 1,7 на
-    # записи автора), с ним — 190
+    # настоящей записи), с ним — 190
     c = _xcorr(em, ec, phat=True)
     k, peak = _peak(c, guard=50)
     return (k - (len(em) - 1)) * HOP, peak

@@ -102,7 +102,7 @@ export function specAt(layer: VisualLayer | undefined, frame: number):
 
 /** Части графики в ролике, как при сборке (graphics._joined): идущие встык
  *  (склейка внутри графики) — один рисунок, не встык (кусок переставлен,
- *  step-29) — каждая своим рисунком с начала. */
+ *  ) — каждая своим рисунком с начала. */
 export function joinedRanges(ranges: [number, number][]): [number, number][] {
   const out: [number, number][] = []
   for (const [a, b] of [...ranges].sort((x, y) => x[0] - y[0])) {

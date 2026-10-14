@@ -180,7 +180,7 @@ def test_each_input_stops_reading_after_its_last_frame(fx_plain, tmp_path):
     assert_exact(edl, fx_plain, out)
 
 
-# ---------- перестановка кусков (step-29) ----------
+# ---------- перестановка кусков ----------
 
 MOVED = [(0, 120), (640, 731), (200, 260), (261, 400), (900, 1500)]
 

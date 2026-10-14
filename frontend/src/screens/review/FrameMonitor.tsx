@@ -2,7 +2,7 @@
 // лицо, раскладка, свои кадры, графика — тот же монитор, что на таймлайне
 // (screens/Monitor.tsx, только кадр), в окне вокруг правки. Полоса — как у
 // плеера: вырезанное пунктиром, черта стыка. Ничего не собирает: кадр
-// рисуется в браузере по лёгким копиям (просьба автора 13.10).
+// рисуется в браузере по лёгким копиям.
 import { useCallback, useImperativeHandle, useMemo, useRef, useState, type ReactNode, type Ref } from 'react'
 import { ErrorText, type PlayerHandle } from '../../components/common'
 import { api } from '../../lib/api'

@@ -68,7 +68,7 @@ class Report:
 def sample_frames(edl: CompiledEdl, max_joints: int = 20, must: Iterable[int] = ()) -> list[int]:
     """Кадры по обе стороны выбранных стыков плюс начало, середина и конец.
 
-    must — стыки, которые в выборке всегда (стыки перестановок, step-29):
+    must — стыки, которые в выборке всегда (стыки перестановок):
     там сборка прыгает по исходнику, ошибка там дороже всего."""
     joints = [c.out_start_frame for c in edl.clips[1:]]
     if len(joints) > max_joints:
@@ -125,7 +125,7 @@ def _lag(seg: np.ndarray, ref: np.ndarray) -> tuple[int, float]:
     Корреляция нормируется на громкость окна ref при каждом сдвиге: иначе
     максимум тянется к более громкому месту исходника, и на голосе (период
     основного тона 3–10 мс) выходил ложный сдвиг на период — найдено 13.10
-    на стыке перестановки, где на 48 кГц совпадение точное (step-29)."""
+    на стыке перестановки, где на 48 кГц совпадение точное."""
     n = len(ref) + len(seg)
     nfft = 1 << (n - 1).bit_length()
     corr = np.fft.irfft(np.fft.rfft(ref, nfft) * np.conj(np.fft.rfft(seg, nfft)), nfft)[: len(ref) - len(seg) + 1]

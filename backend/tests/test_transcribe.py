@@ -76,12 +76,12 @@ def test_chunks_overlap_on_both_sides():
 
 
 def test_repair_finds_speech_hidden_behind_an_invented_phrase():
-    """Как на записи автора в 54:59: Whisper выдал «Субтитры сделал
-    DimaTorzok» на всё окно, а речь 55:07–55:36 потерял."""
+    """Как бывает на настоящей записи: Whisper выдал «Субтитры сделал
+    DimaTorzok» на всё окно, а речь после него потерял."""
     from longform.transcribe import Segment, apply_repair, repair_windows
 
     invented = Segment(0, 30_000, "Субтитры сделал DimaTorzok", 0.3)
-    real = Segment(30_000, 34_000, "рассказал, что такое Jev", 0.8)
+    real = Segment(30_000, 34_000, "показал, как устроен монтаж", 0.8)
     speech = [(8_000, 20_000), (20_500, 34_500)]  # речь идёт с 8 с
     windows = repair_windows([invented, real], speech, duration_ms=40_000)
     assert windows == [(7_750, 30_250)]  # всё до настоящей фразы, с запасом
@@ -91,13 +91,13 @@ def test_repair_finds_speech_hidden_behind_an_invented_phrase():
     long = repair_windows([], [(0, 70_000)])
     assert all(b - a <= 28_000 for a, b in long) and long[0][0] == 0 and long[-1][1] == 70_250
 
-    found = [Segment(8_000, 21_000, "Обязательно подписывайся на мой YouTube канал", 0.8),
-             Segment(21_000, 30_000, "и смотри видео, в котором я", 0.8),
-             Segment(29_800, 32_000, "рассказал, что такое", 0.8),  # уже есть в настоящей фразе
+    found = [Segment(8_000, 21_000, "Сначала откроем папку с записью", 0.8),
+             Segment(21_000, 30_000, "и посмотрим пример, в котором я", 0.8),
+             Segment(29_800, 32_000, "показал, как устроен", 0.8),  # уже есть в настоящей фразе
              Segment(25_000, 26_000, "Продолжение следует...", 0.9)]  # снова выдумка
     out = apply_repair([invented, real], [((7_750, 30_250), found)])
-    assert [s.text for s in out] == ["Обязательно подписывайся на мой YouTube канал", "и смотри видео, в котором я",
-                                     "рассказал, что такое Jev"]
+    assert [s.text for s in out] == ["Сначала откроем папку с записью", "и посмотрим пример, в котором я",
+                                     "показал, как устроен монтаж"]
 
 
 def test_repair_leaves_good_phrases_alone():

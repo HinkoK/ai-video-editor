@@ -104,7 +104,7 @@ def test_old_database_upgrades_without_losing_edits_jobs_and_reports(tmp_path, f
 
 
 def test_moves_migration_keeps_old_edits_and_revisions_immutable(tmp_path, fx_plain):
-    """017 (step-29): старая база поднимается со всеми правками, у старых версий
+    """017: старая база поднимается со всеми правками, у старых версий
     слой перестановок пустой, и его, как и куски, менять нельзя [R-005]."""
     conn = connect(tmp_path / "editor.db")
     migrate_to(conn, 16)

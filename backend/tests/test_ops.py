@@ -180,7 +180,7 @@ def run_with_base(base, ops, is_quiet):
     return apply_ops(base, snapped, SOURCES, ORDER, is_quiet=is_quiet)
 
 
-# ---------- перестановка кусков (step-29) ----------
+# ---------- перестановка кусков ----------
 
 def mv(asset, a, b, target, side="after"):
     return Op("move", asset, us(a), us(b), "reorder", "автор попросил переставить",

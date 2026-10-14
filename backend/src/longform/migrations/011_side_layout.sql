@@ -26,6 +26,6 @@ ALTER TABLE visual_segments_new RENAME TO visual_segments;
 CREATE INDEX visual_by_project ON visual_segments (project_id, asset_id, src_start_us);
 
 -- Чей звук идёт в ролик: screen — микрофон записи экрана (как раньше),
--- camera — звук сведённой камеры (у автора хороший микрофон подключён к ней)
+-- camera — звук сведённой камеры (если хороший микрофон подключён к ней)
 ALTER TABLE projects ADD COLUMN audio_source TEXT NOT NULL DEFAULT 'screen'
     CHECK (audio_source IN ('screen', 'camera'));

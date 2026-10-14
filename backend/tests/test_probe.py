@@ -57,7 +57,7 @@ def test_rounding_jitter_is_still_constant_rate():
 
     step = Fraction(256)  # 60 к/с в шкале 1/15360
     assert is_constant_rate(Fraction(0), step)
-    assert is_constant_rate(step / 50, step)  # как у настоящей записи автора
+    assert is_constant_rate(step / 50, step)  # как у настоящей записи OBS
     assert is_constant_rate(step / 4, step)
     assert not is_constant_rate(step * 3 / 10, step)
     assert not is_constant_rate(step, step)  # пропущенный кадр сдвигает всё дальше на кадр

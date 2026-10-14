@@ -245,7 +245,7 @@ def _clips(row: sqlite3.Row) -> list[Clip]:
 
 
 def _moves(row: sqlite3.Row) -> list[Move]:
-    """Слой перестановок версии (step-29); у версий до него — пустой."""
+    """Слой перестановок версии; у версий до него — пустой."""
     return [Move.from_dict(m) for m in json.loads(row["moves_json"] or "[]")]
 
 
@@ -855,7 +855,7 @@ def _commit_decision(conn: sqlite3.Connection, pid: str, prop: sqlite3.Row, rows
 
 
 def _auto_apply(conn: sqlite3.Connection, pid: str, prop_id: str) -> None:
-    """Режим «правки Claude применяются сразу» (решение автора от 2026-10-06).
+    """Режим «правки Claude применяются сразу».
 
     Правки агента сразу становятся текущей версией, автор проверяет их после.
     Не применяются только правки, задевающие жёсткую защиту: её ставит автор,
@@ -1027,7 +1027,7 @@ def nudge_joint(conn: sqlite3.Connection, pid: str, *, revision_id: str, joint: 
     if frames > 0 and layer:
         # С перестановками «вернуть» можно, только если кадры встанут у этого
         # стыка: вырезанные — да, а переставленные или их место — в другом
-        # месте ролика (свежий взгляд step-29)
+        # месте ролика
         sources, order, _ = load_sources(conn, pid)
         mains = [x for x in order if x in {r[0] for r in conn.execute(
             "SELECT id FROM assets WHERE project_id = ? AND role = 'main'", (pid,))}]

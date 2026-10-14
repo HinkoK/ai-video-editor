@@ -140,7 +140,7 @@ def test_random_edls_map_every_frame_both_ways():
 
 
 def test_random_reordered_edls_map_every_frame_both_ways():
-    """Перестановка кусков (step-29): куски не по порядку исходника —
+    """Перестановка кусков: куски не по порядку исходника —
     каждый кадр туда и обратно, звук без дыр, отсчёт куска от его кадра."""
     rng = random.Random(20261013)
     for _ in range(200):

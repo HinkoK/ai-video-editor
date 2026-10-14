@@ -38,7 +38,7 @@ export function cutWindow(rev: Revision, rate: Rate, assetId: string, startUs: n
 
 /** Отрезок файла записи [startUs, endUs) в кадрах версии; undefined — его
  *  в версии нет. Части отрезка по кускам версии, соседние в ролике — одним
- *  отрезком. После перестановки (step-29) части бывают в разных местах
+ *  отрезком. После перестановки части бывают в разных местах
  *  ролика — тогда та, где начало отрезка (самый ранний оставленный момент). */
 export function framesOf(rev: Revision, rate: Rate, assetId: string, startUs: number, endUs: number): [number, number] | undefined {
   const parts: { a: number; b: number; from: number }[] = []

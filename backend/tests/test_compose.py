@@ -183,7 +183,7 @@ def test_camera_motion_punch_returns_and_push_restarts_at_cuts(sources, tmp_path
 
 
 def test_camera_zoom_attack_is_smooth_and_can_return(sources, tmp_path):
-    """Зум (решение автора 08.10): лицо плавно приближается за attack, а не
+    """Зум: лицо плавно приближается за attack, а не
     рывком; с release потом плавно возвращается к общему плану."""
     screen, camera = sources
     pm, pc = probe(screen.path), probe(camera.path)
@@ -208,7 +208,7 @@ def test_camera_zoom_attack_is_smooth_and_can_return(sources, tmp_path):
 
 
 def test_broll_shows_clip_frames_and_preview_matches(sources, tmp_path):
-    """Свой кадр (broll, решение автора 08.10): во весь экран идут кадры клипа с
+    """Свой кадр (broll): во весь экран идут кадры клипа с
     секунды at, в частоте ролика; до и после — снова экран. Пробный ролик с
     середины участка начинает клип с того же места, что и готовый."""
     screen, camera = sources
@@ -232,7 +232,7 @@ def test_broll_shows_clip_frames_and_preview_matches(sources, tmp_path):
 
 
 def test_side_video_background_flows_across_shots(sources, tmp_path):
-    """Видео-фон за рамкой экрана (решение автора 08.10, пока для одного ролика):
+    """Видео-фон за рамкой экрана:
     вместо тёмной сетки идёт видео, и на стыке участков оно не начинается заново."""
     screen, camera = sources
     pm, pc = probe(screen.path), probe(camera.path)
@@ -608,7 +608,7 @@ def test_camera_sound_replaces_screen_sound_sample_exact(sources, tmp_path):
 
 
 def test_moved_pieces_keep_camera_frame_exact(sources, tmp_path):
-    """Перестановка (step-29): куски не по порядку записи — камера в каждом
+    """Перестановка: куски не по порядку записи — камера в каждом
     кадре та, что снимала в момент этого кадра экрана. Участков два: сборка
     идёт по участкам (часть через стык перестановки)."""
     screen, camera = sources
