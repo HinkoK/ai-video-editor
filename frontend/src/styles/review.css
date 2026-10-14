@@ -1,0 +1,275 @@
+/*
+  Экран «Проверка» по макету «Монтаж · Проверка» (01–06) и разделам
+  «Плеер» и «Карточка правки» страницы стиля. Классы экрана — rv-*.
+  Состояния — по data-атрибутам: data-mode, data-review, data-risk,
+  data-included, data-removed, data-state.
+*/
+
+/* ── Каркас: строка под шапкой, две колонки на всю высоту ──────────── */
+.rv { background: var(--bg); }
+.rv-subbar { gap: 6px; }
+.rv-status { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+.rv-status b { font-family: var(--font-mono); font-weight: 500; }
+.rv-mode { color: var(--text-2); }
+.rv-count { color: var(--text); }
+.rv-also { color: var(--text-2); }
+.rv-subbar .mark { font-size: var(--fs-13); }
+.rv-subbar .rv-held b { color: var(--warn); }
+.rv-subbar .rv-all-ok::before { width: 8px; height: 8px; }
+.rv-notice { margin-left: auto; font-size: var(--fs-12); color: var(--text-2); }
+.rv-notice + .keys { margin-left: var(--sp-4); }
+
+.rv-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 344px minmax(0, 1fr); }
+.rv-body[data-layout="propose"] { grid-template-columns: 540px minmax(0, 1fr); }
+.rv-pad { padding: var(--sp-5); }
+
+/* ── Очередь правок (режим «сразу») ─────────────────────────────────── */
+.rv-queue {
+  display: flex; flex-direction: column; min-height: 0;
+  background: var(--surface-1); border-right: 1px solid var(--line);
+}
+.rv-queue-scroll { flex: 1; min-height: 0; overflow: auto; padding: var(--sp-1) var(--sp-2) var(--sp-4); }
+.rv-group { display: flex; flex-direction: column; }
+.rv-group-title {
+  display: flex; align-items: center; gap: var(--sp-2); padding: 14px var(--sp-3) 6px;
+  font-size: var(--fs-12); font-weight: 500; color: var(--text-2);
+}
+.rv-group-count { margin-left: auto; font-family: var(--font-mono); font-weight: 400; color: var(--text-3); }
+.rv-group > ol { display: flex; flex-direction: column; gap: 2px; }
+
+/* Значки групп: ромб — ждут решения, треугольник — риск, кольцо — не проверены */
+.rv-ico { flex: none; }
+.rv-ico[data-ico="held"] { width: 7px; height: 7px; background: var(--warn); transform: rotate(45deg); }
+.rv-ico[data-ico="risky"] {
+  width: 0; height: 0;
+  border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid var(--warn);
+}
+.rv-ico[data-ico="pending"] { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--text-2); }
+
+/* Строка очереди */
+.rv-q {
+  width: 100%; display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; column-gap: 10px; align-items: baseline;
+  padding: 7px var(--sp-3) 7px var(--sp-2); border: 0; border-radius: var(--radius);
+  background: transparent; color: inherit; text-align: left; cursor: pointer;
+  transition: background-color var(--dur);
+}
+.rv-q:hover { background: var(--surface-2); }
+.rv-q[aria-current="true"] { background: var(--surface-3); }
+.rv-q-n { font: 400 var(--fs-12)/20px var(--font-mono); color: var(--text-3); text-align: right; }
+.rv-q-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.rv-q-title {
+  font-size: var(--fs-14); line-height: 20px; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rv-q-place { font: 400 var(--fs-12)/16px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text-3); }
+.rv-q-tag { font-size: var(--fs-12); line-height: 20px; white-space: nowrap; color: var(--text-3); }
+li:is([data-review="held"], [data-risk="yes"][data-review="pending"]) > .rv-q .rv-q-tag { color: var(--warn); }
+li[data-review="kept"] > .rv-q .rv-q-tag { color: var(--ok); }
+li[data-review="reverted"] > .rv-q .rv-q-tag { color: var(--text-2); }
+li:is([data-review="kept"], [data-review="reverted"]) > .rv-q .rv-q-title { color: var(--text-2); }
+li[data-proposal="open"] > .rv-q .rv-q-tag { color: var(--accent); }
+
+/* «Проверены»: свёрнуто — полоса внизу очереди, развёрнуто — группа в списке */
+.rv-chevron {
+  flex: none; width: 6px; height: 6px;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg);
+}
+[aria-expanded="true"] > .rv-chevron { transform: translateY(-2px) rotate(45deg); }
+.rv-done-toggle {
+  flex: none; height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 20px;
+  border: 0; border-top: 1px solid var(--line); background: var(--surface-1);
+  color: var(--text-2); font-size: var(--fs-12); font-weight: 500; cursor: pointer;
+  transition: background-color var(--dur), color var(--dur);
+}
+.rv-done-toggle:hover { background: var(--surface-2); color: var(--text); }
+.rv-done-toggle .rv-group-count { margin-left: 0; }
+.rv-done-sum { margin-left: auto; font-weight: 400; color: var(--text-3); }
+.rv-group-toggle {
+  flex: 1; display: flex; align-items: center; gap: var(--sp-2); padding: 0; border: 0; background: none;
+  font: inherit; color: inherit; cursor: pointer;
+}
+.rv-group-toggle:hover { color: var(--text); }
+
+/* ── Выбранная правка ───────────────────────────────────────────────── */
+.rv-detail {
+  min-height: 0; overflow: auto; padding: var(--sp-5) var(--sp-5) var(--sp-6);
+  display: flex; flex-direction: column; gap: var(--sp-5);
+}
+.rv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-5); }
+.rv-head-main { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+.rv-title-row { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.rv-title { font-size: var(--fs-20); font-weight: 600; line-height: 28px; }
+.rv-place { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-4); align-items: baseline; font-size: var(--fs-13); color: var(--text-2); }
+.rv-place .mono { font: 400 var(--fs-13)/20px var(--font-mono); color: var(--text); }
+.rv-origin { display: flex; flex-direction: column; gap: 2px; font-size: var(--fs-12); color: var(--text-3); }
+.rv-actions { display: flex; gap: var(--sp-2); flex: none; }
+
+/* Ждёт решения: причина и «Применить» */
+.rv-apply { display: flex; align-items: flex-end; gap: var(--sp-2); max-width: 640px; }
+.rv-apply .field { flex: 1; }
+
+.rv-facts { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--sp-6); }
+.rv-facts[data-narrow="yes"] { grid-template-columns: minmax(0, 1fr) 280px; }
+.rv-block { display: flex; flex-direction: column; gap: 6px; }
+.rv-block > h3, .rv-joints-head h3 { font-size: var(--fs-13); font-weight: 500; color: var(--text-2); }
+.rv-why { font-size: var(--fs-read); line-height: var(--lh-read); color: var(--text); max-width: 68ch; text-wrap: pretty; }
+.rv-risks { display: flex; flex-direction: column; gap: 6px; }
+.rv-risks .mark { font-size: var(--fs-14); line-height: 24px; white-space: normal; }
+/* Длинная пометка переносится: значок — у первой строки */
+:is(.rv-risks, .rv-op-risks, .rv-footer-why) .mark { align-items: baseline; }
+
+/* Плееры «До» и «После» рядом */
+.rv-players { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+.rv-player-slot { min-width: 0; }
+.rv-players .player-head h3 { color: var(--text); }
+/* Окна «До» и «После» — кадр как в ролике: справа в заголовке подпись и кнопка точного ролика */
+.rv-frame-side { display: flex; align-items: baseline; gap: var(--sp-2); min-width: 0; }
+/* Заголовки обоих окон одной высоты: кнопка справа не сдвигает кадр «После» ниже «До» */
+.rv-players .player-head { min-height: var(--control-h-sm); align-items: center; }
+.rv-after .player-head .rv-after-word { font: 400 var(--fs-12) var(--font-sans); color: var(--text-3); }
+.rv-after .player-head .rv-after-word[data-word="running"] { color: var(--accent); }
+.rv-after .player-head .rv-after-word[data-word="error"] { color: var(--danger); }
+.rv-after .video-frame.pending p { font-size: var(--fs-13); color: var(--text-2); }
+.rv-pct { font-family: var(--font-mono); color: var(--text); }
+.rv-after .video-frame.pending[data-state="running"] .progress { width: 240px; max-width: 70%; }
+.rv-after .video-frame.pending .rv-after-fail {
+  display: flex; align-items: center; gap: var(--sp-2); font-weight: 500; color: var(--text);
+}
+.rv-after-fail::before { content: ""; width: 8px; height: 8px; border-radius: 1px; background: var(--danger); }
+.rv-after .video-frame.pending .rv-after-error { font: 400 var(--fs-12)/1.5 var(--font-mono); color: var(--danger); }
+.rv-after .video-frame.pending .rv-after-hint { font-size: var(--fs-12); }
+.rv-after-foot { height: var(--control-h); display: flex; align-items: center; font-size: var(--fs-12); color: var(--text-3); }
+
+/* «Текст вокруг» */
+.rv-around { max-width: 820px; }
+.rv-around ol { display: flex; flex-direction: column; }
+.rv-around li {
+  display: grid; grid-template-columns: 76px minmax(0, 1fr) 72px; gap: var(--sp-3); align-items: baseline;
+  padding: var(--sp-1) 0; border-top: 1px solid var(--line);
+}
+.rv-around li:last-child { border-bottom: 1px solid var(--line); }
+.rv-around li p { font-size: var(--fs-read); line-height: var(--lh-read); color: var(--text); }
+.rv-around li[data-removed="yes"] p, .rv-around li[data-removed="yes"] .time-link { color: var(--text-3); }
+.rv-around li[data-removed="yes"] .time-link:hover { color: var(--accent); }
+.rv-around .chip { justify-self: end; }
+
+/* «Стыки текущей версии» */
+.rv-joints { gap: var(--sp-2); }
+.rv-joints-head { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; }
+.rv-joints-note { font-size: var(--fs-12); color: var(--text-3); }
+.rv-joints-head .btn-quiet { height: 24px; padding: 0 6px; font-size: var(--fs-12); }
+.rv-joints ol { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.rv-joint {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px var(--sp-3);
+  padding: var(--sp-2) var(--sp-3); border-top: 1px solid var(--line);
+}
+.rv-joint:first-child { border-top: 0; }
+.rv-joint[aria-current="true"] { background: var(--surface-2); }
+.rv-joint-text { flex: 1 1 280px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.rv-joint-place {
+  font: 400 var(--fs-13)/20px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rv-joint-note { font-size: var(--fs-12); line-height: 16px; color: var(--text-3); }
+.rv-joint-controls { display: flex; align-items: center; gap: var(--sp-3); margin-left: auto; }
+.rv-joint-frames { display: flex; align-items: center; gap: 6px; font-size: var(--fs-12); color: var(--text-2); white-space: nowrap; }
+.rv-joint-frames input { width: 52px; height: var(--control-h-sm); padding: 0 6px; font-size: var(--fs-13); text-align: right; }
+.rv-joint-buttons { display: flex; gap: var(--sp-1); }
+.rv-joint-buttons .btn-quiet { padding: 0 6px; }
+
+/* ── Всё проверено ──────────────────────────────────────────────────── */
+.rv-summary { padding: var(--sp-7); display: flex; flex-direction: column; gap: var(--sp-4); max-width: 620px; }
+.rv-summary h2 { font-size: var(--fs-20); font-weight: 600; line-height: 28px; }
+.rv-summary p { font-size: var(--fs-read); line-height: var(--lh-read); color: var(--text-2); }
+.rv-summary dl {
+  margin-top: var(--sp-2); display: grid; grid-template-columns: auto 1fr; gap: 6px var(--sp-5); font-size: var(--fs-13);
+}
+.rv-summary dt { color: var(--text-3); }
+.rv-summary dd { font-family: var(--font-mono); color: var(--text); }
+.rv-summary dd[data-review="kept"] { color: var(--ok); }
+.rv-summary-actions { display: flex; gap: var(--sp-2); margin-top: var(--sp-2); }
+
+/* ── Предложение (режим «предлагает») ───────────────────────────────── */
+.rv-prop {
+  display: flex; flex-direction: column; min-height: 0;
+  background: var(--surface-1); border-right: 1px solid var(--line);
+}
+.rv-prop-head {
+  flex: none; display: flex; flex-direction: column; gap: var(--sp-3);
+  padding: var(--sp-4) 20px; border-bottom: 1px solid var(--line);
+}
+.rv-prop-nav { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin: -6px 0 0 -8px; }
+.rv-prop-nav .btn-quiet[aria-pressed="true"] { background: var(--surface-3); color: var(--text); }
+.rv-prop-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); }
+.rv-prop-title { font-size: var(--fs-16); font-weight: 600; line-height: 24px; }
+.rv-prop-counts { font-size: var(--fs-13); color: var(--text-2); white-space: nowrap; }
+.rv-prop-counts b { font-family: var(--font-mono); font-weight: 500; color: var(--text); }
+.rv-prop-counts b.rv-warn { color: var(--warn); }
+.rv-filters { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+.rv-filter-reason select { width: 180px; }
+.rv-filter-risk select { width: 150px; }
+
+.rv-ops { flex: 1; min-height: 0; overflow: auto; }
+.rv-op {
+  display: flex; flex-direction: column; gap: var(--sp-2);
+  padding: var(--sp-3) 20px var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--line);
+}
+.rv-op[aria-current="true"] { background: var(--surface-2); }
+.rv-op-select {
+  display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: var(--sp-3); align-items: baseline;
+  padding: 0; border: 0; border-radius: var(--radius-sm); background: none; color: inherit; text-align: left; cursor: pointer;
+}
+.rv-op-title { font-size: var(--fs-14); line-height: 20px; font-weight: 500; color: var(--text); }
+.rv-op-select:hover .rv-op-title { text-decoration: underline; text-decoration-color: var(--line-control); }
+.rv-op[data-included="no"] .rv-op-title { color: var(--text-3); }
+.rv-op .rv-q-place { line-height: 20px; }
+.rv-op-risks { display: flex; flex-wrap: wrap; gap: var(--sp-1) 14px; padding-left: 36px; }
+.rv-op-risks .mark { gap: 6px; font-size: var(--fs-12); line-height: 18px; }
+.rv-op-checks { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-5); padding-left: 36px; }
+.rv-op-checks .check { min-height: 24px; }
+.rv-op-reason { padding-left: 36px; }
+.rv-op-reason .field-label { font-size: var(--fs-12); }
+
+/* Утверждение: чего не хватает и кнопки */
+.rv-footer {
+  flex: none; display: flex; align-items: center; gap: var(--sp-5); min-height: 64px; padding: var(--sp-3) var(--sp-4);
+  border-top: 1px solid var(--line); background: var(--surface-1);
+}
+.rv-footer-why { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; }
+.rv-footer-why > p { font-size: var(--fs-13); font-weight: 500; color: var(--text); }
+.rv-footer-why ul { display: flex; flex-direction: column; gap: 2px; }
+.rv-footer-why .mark { white-space: normal; }
+.rv-blocker::before {
+  width: 0; height: 0; border: 0; border-radius: 0;
+  border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid currentColor;
+}
+.rv-footer > .mark[data-state="ok"] { font-size: var(--fs-13); }
+.rv-footer-actions { margin-left: auto; display: flex; gap: var(--sp-2); flex: none; }
+
+/* ── Пусто, ошибка ──────────────────────────────────────────────────── */
+.rv .state-panel { max-width: 640px; }
+.rv[data-state="error"] .state-panel { max-width: 680px; }
+.rv-command {
+  padding: 10px var(--sp-3); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+  font: 400 var(--fs-13)/1.5 var(--font-mono); color: var(--text); white-space: pre-wrap;
+}
+.rv .state-panel .rv-panel-note { font-size: var(--fs-13); color: var(--text-3); }
+.rv-panel-actions { display: flex; gap: var(--sp-2); margin-top: var(--sp-1); }
+.rv-link {
+  padding: 0; border: 0; background: none; font: inherit; color: var(--accent); cursor: pointer;
+}
+.rv-link:hover { text-decoration: underline; }
+
+/* ── Загрузка ───────────────────────────────────────────────────────── */
+.rv-skeleton-queue {
+  padding: 20px var(--sp-4); display: flex; flex-direction: column; gap: 14px;
+  background: var(--surface-1); border-right: 1px solid var(--line);
+}
+.rv-sk-h { width: 96px; height: 10px; }
+.rv-sk-h2 { width: 120px; margin-top: var(--sp-2); }
+.rv-sk-row { height: 36px; border-radius: var(--radius); }
+.rv-skeleton-detail { padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-4); }
+.rv-sk-title { width: 320px; height: 20px; border-radius: var(--radius-sm); }
+.rv-sk-line { width: 220px; }
+.rv-sk-players { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); margin-top: var(--sp-2); }
+.rv-sk-frame { height: 240px; border-radius: var(--radius); background: var(--surface-1); border: 1px solid var(--line); }

@@ -1,0 +1,30 @@
+/*
+  Внешний вид графики — нейтральный стартовый. Свой стиль: поменяй цвета и
+  шрифты здесь (docs/STYLE_GUIDE.md, шаг 5). Шрифты — пакеты @fontsource в
+  package.json и списки packs/FONTS в render.mjs, fitcheck.mjs, preview.html,
+  stills.mjs.
+  Размеры — в единицах --u = 1/1080 высоты кадра: на 1080p и 1440p графика
+  выглядит одинаково.
+*/
+:root {
+  --u: calc(100vh / 1080);
+  --font: "Golos Text", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  --card: rgba(20, 22, 26, 0.88);
+  --card-line: rgba(255, 255, 255, 0.10);
+  --text: #F4F5F7;
+  --text-2: #A9AEB8;
+  --accent: #6EA8FE;
+  --on-accent: #0B1220;      /* текст на акценте */
+  --ok: #5FCF89;
+  --warn: #F5B544;
+  --dim: rgba(10, 11, 13, 0.72);
+  --radius: calc(18 * var(--u));
+  --margin: calc(64 * var(--u));
+  --x-bg: #111317;           /* фон сцены у графики во весь кадр и вставки страницы */
+  /* Движение: появление, спокойное чтение, уход */
+  --enter: 420ms;
+  --exit: 260ms;
+  --ease-in: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.45, 0, 0.55, 1);
+}

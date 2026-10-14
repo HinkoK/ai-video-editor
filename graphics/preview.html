@@ -1,0 +1,65 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Графика</title></head>
+<body style="margin:0;background:transparent">
+<script type="module">
+// Окно графики для монитора программы (frontend, как Program Monitor в
+// Premiere): собирает ту же страницу, что graphics/render.mjs для кадров
+// ролика, и проматывает анимации на момент, который присылает монитор.
+//   {build: {template, props, durationMs}} — собрать; {t: мс} — промотать.
+import { page } from './templates.mjs'
+
+const FONTS = [['golos-text', [400, 500, 600, 700]], ['jetbrains-mono', [400, 500]]]
+const fonts = Promise.all(FONTS.flatMap(([pkg, weights]) => weights.map((w) =>
+  fetch(`./node_modules/@fontsource/${pkg}/${w}.css`).then((r) => r.text())
+    .then((css) => css.replace(/url\(\.\/files\//g, `url(./node_modules/@fontsource/${pkg}/files/`)))))
+  .then((parts) => parts.join('\n'))
+const theme = fetch('./theme.css').then((r) => r.text())
+let at = 0
+
+function seek(ms) {
+  at = ms
+  // Общая перемотка страницы (templates.mjs, SEEK) — как в render.mjs: слой у
+  // движущегося, Lottie через window.__adapters
+  if (window.__seek) return window.__seek(ms)
+  for (const a of document.getAnimations()) {
+    a.pause()
+    a.currentTime = ms
+  }
+  for (const a of window.__adapters ?? []) a.seek(ms)
+}
+
+// Скрипты из страницы, разобранной DOMParser, сами не запускаются —
+// пересоздаём их по порядку (проигрыватель Lottie раньше шаблона)
+async function runScripts() {
+  window.__adapters = []
+  for (const old of [...document.body.querySelectorAll('script')]) {
+    const s = document.createElement('script')
+    if (old.src) {
+      s.src = old.getAttribute('src')
+      await new Promise((r) => { s.onload = r; s.onerror = r; old.replaceWith(s) })
+    } else {
+      s.textContent = old.textContent
+      old.replaceWith(s)
+    }
+  }
+  await Promise.all(window.__adapters.map((a) => a.ready))
+}
+
+window.addEventListener('message', async (e) => {
+  if (e.origin !== location.origin) return
+  const m = e.data ?? {}
+  if (m.build) {
+    const html = page(m.build.template, m.build.props, { durationMs: m.build.durationMs, fontsCss: await fonts, themeCss: await theme })
+    const doc = new DOMParser().parseFromString(html, 'text/html')
+    document.head.replaceChildren(...doc.head.childNodes)
+    document.body.replaceChildren(...doc.body.childNodes)
+    await runScripts()
+    await document.fonts.ready
+    seek(at)
+    parent.postMessage({ ready: true, id: m.id }, location.origin)
+  }
+  if (typeof m.t === 'number') seek(m.t)
+})
+parent.postMessage({ loaded: true }, location.origin)
+</script>
+</body></html>

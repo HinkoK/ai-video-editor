@@ -1,0 +1,296 @@
+/*
+  Общие элементы по странице «Монтаж · Стиль»: кнопки, поля, флажки,
+  значки состояний, клавиши, ход задачи, плеер, таблица, пустые экраны.
+  Состояния оформляются по data-атрибутам, которые выставляет код.
+*/
+
+/* ── Кнопки ─────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  height: var(--control-h); padding: 0 var(--sp-3);
+  border: 1px solid var(--line-strong); border-radius: var(--radius);
+  background: var(--surface-2); color: var(--text);
+  font-size: var(--fs-14); font-weight: 500; white-space: nowrap; cursor: pointer;
+  transition: background-color var(--dur), border-color var(--dur), color var(--dur);
+}
+.btn:hover { background: var(--surface-3); }
+.btn:active { background: var(--surface-4); }
+.btn-primary { padding: 0 14px; border-color: var(--primary-bg); background: var(--primary-bg); color: var(--primary-text); }
+.btn-primary:hover { border-color: var(--primary-hover); background: var(--primary-hover); }
+.btn-primary:active { border-color: var(--primary-press); background: var(--primary-press); }
+.btn-quiet {
+  height: var(--control-h-sm); padding: 0 var(--sp-2);
+  border-color: transparent; background: transparent; color: var(--text-2); font-size: var(--fs-13);
+}
+.btn-quiet:hover { background: var(--surface-3); color: var(--text); }
+.btn-quiet:active { background: var(--surface-4); color: var(--text); }
+.btn-danger { color: var(--danger); }
+.btn-danger:hover, .btn-danger:active { border-color: var(--danger); }
+.btn-sm { height: var(--control-h-sm); padding: 0 10px; font-size: var(--fs-13); }
+.btn:disabled, .btn[aria-disabled="true"] {
+  border-color: var(--line); background: transparent; color: var(--line-control); cursor: not-allowed;
+}
+.btn-quiet:disabled { border-color: transparent; }
+.btn kbd { color: var(--text-3); }
+.btn-primary kbd { border-color: var(--text-3); color: var(--line-strong); }
+.btn-primary:disabled kbd, .btn:disabled kbd { border-color: var(--line); color: var(--line-control); }
+.btn:has(kbd) { padding-right: 10px; }
+
+/* Ссылка-кнопка: время, по которому переходят */
+.time-link {
+  justify-self: start; padding: 0 var(--sp-1); border: 0; border-radius: var(--radius-sm);
+  background: none; font: 400 var(--fs-13)/24px var(--font-mono); font-variant-numeric: tabular-nums;
+  color: var(--text-2); cursor: pointer;
+}
+.time-link:hover { color: var(--accent); text-decoration: underline; }
+.time-link[aria-current="true"] { color: var(--accent); }
+
+/* ── Клавиши ────────────────────────────────────────────────────────── */
+kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; padding: 0 var(--sp-1);
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  font: 400 var(--fs-12)/1 var(--font-mono); color: var(--text-3);
+}
+.keys { display: flex; gap: var(--sp-4); font-size: var(--fs-12); color: var(--text-3); }
+.keys li { display: flex; align-items: center; gap: var(--sp-1); }
+
+/* ── Поля ───────────────────────────────────────────────────────────── */
+input:is([type="text"], [type="search"], [type="number"], :not([type])), textarea, select {
+  height: var(--control-h); padding: 0 10px;
+  background: var(--surface-2); border: 1px solid var(--line-control); border-radius: var(--radius);
+  font-size: var(--fs-14); color: var(--text);
+  transition: border-color var(--dur);
+}
+textarea { height: auto; min-height: 36px; padding: 6px 10px; line-height: var(--lh-read); resize: vertical; }
+:is(input, textarea, select):hover { border-color: var(--text-3); }
+:is(input, textarea, select):focus { border-color: var(--accent); }
+:is(input, textarea, select)[aria-invalid="true"] { border-color: var(--danger); }
+:is(input, textarea, select):disabled {
+  background: transparent; border-color: var(--line-strong); color: var(--text-3); cursor: not-allowed;
+}
+input[type="number"] { font-family: var(--font-mono); text-align: center; }
+input.mono, textarea.mono { font: 400 var(--fs-13) var(--font-mono); }
+/* Поле, заполненное Claude и ещё не подтверждённое */
+[data-state="draft"] :is(input, textarea), :is(input, textarea)[data-state="draft"] {
+  background: transparent; border-style: dashed; border-color: var(--line-control);
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field-label { font-size: var(--fs-13); font-weight: 500; color: var(--text-2); }
+.field-hint { font-size: var(--fs-12); color: var(--text-3); }
+
+/* Выпадающий список: обёртка рисует стрелку */
+.select { position: relative; display: inline-flex; }
+.select select {
+  appearance: none; -webkit-appearance: none; width: 100%;
+  padding-right: 28px; cursor: pointer;
+}
+.select::after {
+  content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; margin-top: -5px;
+  border-right: 1.5px solid var(--text-2); border-bottom: 1.5px solid var(--text-2);
+  transform: rotate(45deg); pointer-events: none;
+}
+.select.sm select { height: var(--control-h-sm); font-size: var(--fs-13); padding-left: var(--sp-2); }
+.select:has(select:disabled)::after { border-color: var(--line-strong); }
+
+.inline-label { display: inline-flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-12); color: var(--text-2); }
+
+/* ── Флажок и радио ─────────────────────────────────────────────────── */
+input[type="checkbox"], input[type="radio"] {
+  appearance: none; -webkit-appearance: none; flex: none;
+  width: 16px; height: 16px; margin: 0; display: inline-grid; place-content: center;
+  border: 1px solid var(--line-control); border-radius: var(--radius-sm); background: var(--surface-2);
+  cursor: pointer; transition: background-color var(--dur), border-color var(--dur);
+}
+input[type="radio"] { border-radius: 50%; background: transparent; }
+:is(input[type="checkbox"], input[type="radio"]):hover { border-color: var(--text-2); background: var(--surface-3); }
+input[type="checkbox"]:checked { border-color: var(--accent); background: var(--accent); }
+input[type="checkbox"]:checked::after {
+  content: ""; width: 5px; height: 9px; margin-top: -2px;
+  border-right: 2px solid var(--bg); border-bottom: 2px solid var(--bg); transform: rotate(45deg);
+}
+input[type="radio"]:checked { border-color: var(--accent); background: transparent; }
+input[type="radio"]:checked::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+:is(input[type="checkbox"], input[type="radio"]):disabled { border-color: var(--line-strong); background: transparent; cursor: not-allowed; }
+input[type="checkbox"]:checked:disabled { background: var(--line-strong); }
+input[type="checkbox"]:checked:disabled::after { border-color: var(--text-3); }
+.check { display: inline-flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-13); color: var(--text-2); cursor: pointer; }
+.check:hover, .check:has(:checked) { color: var(--text); }
+
+/* ── Значки состояний ───────────────────────────────────────────────────
+   .chip — значок в рамке, .mark — значок без рамки (риски, «пройдено»).
+   Форма: кольцо — ещё не сделано; точка — готово; квадрат — ошибка или
+   жёсткое; ромб — ждёт решения; треугольник — риск; черта — отменено. */
+.chip, .mark { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.chip {
+  height: 22px; padding: 0 var(--sp-2);
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  font-size: var(--fs-12); font-weight: 500; color: var(--text-2);
+}
+.chip.sm { height: 20px; padding: 0 6px; font-weight: 400; }
+.mark { gap: var(--sp-2); font-size: var(--fs-13); color: var(--warn); }
+.chip::before, .mark::before {
+  content: ""; flex: none; width: 8px; height: 8px; box-sizing: border-box;
+  border: 1.5px solid currentColor; border-radius: 50%;
+}
+.chip.plain::before, .mark.plain::before, .mark.plain[data-ok]::before { content: none; }
+
+/* точка */
+:is(.chip, .mark):is([data-review="kept"], [data-state="completed"], [data-final="yes"], [data-state="ok"])::before {
+  border: 0; background: currentColor;
+}
+/* пустой квадрат */
+:is(.chip, .mark):is([data-review="reverted"], [data-flag="repeated"], [data-kind="soft"])::before { border-radius: 1px; }
+/* закрашенный квадрат */
+:is(.chip, .mark):is([data-state="failed"], [data-state="error"], [data-final="no"], [data-kind="hard"])::before {
+  border: 0; border-radius: 1px; background: currentColor;
+}
+/* ромб */
+:is(.chip, .mark):is([data-review="held"], [data-state="interrupted"], [data-flag="no_speech"], [data-flag="suspect_phrase"], [data-state="warning"])::before {
+  width: 7px; height: 7px; border: 0; border-radius: 0; background: currentColor; transform: rotate(45deg);
+}
+/* треугольник */
+:is(.chip, .mark):is([data-risk], [data-flag="high_impact"])::before {
+  width: 0; height: 0; border: 0; border-radius: 0;
+  border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid currentColor;
+}
+/* черта */
+:is(.chip, .mark):is([data-state="cancelled"], [data-removed="yes"], [data-stale="yes"])::before {
+  height: 1.5px; border: 0; border-radius: 0; background: currentColor;
+}
+/* кольцо с разрывом — идёт */
+:is(.chip, .mark)[data-state="running"]::before { border-right-color: transparent; }
+
+/* цвет */
+:is(.chip, .mark):is([data-review="kept"], [data-state="completed"], [data-final="yes"], [data-state="ok"], [data-ok="yes"]) { color: var(--ok); }
+:is(.chip, .mark):is([data-review="held"], [data-state="interrupted"], [data-flag="high_impact"], [data-flag="no_speech"], [data-flag="suspect_phrase"], [data-risk], [data-state="warning"]) { color: var(--warn); }
+:is(.chip, .mark):is([data-state="failed"], [data-state="error"], [data-final="no"], [data-ok="no"]) { color: var(--danger); }
+:is(.chip, .mark)[data-state="running"] { color: var(--accent); }
+:is(.chip, .mark)[data-state="cancelled"] { color: var(--text-3); }
+:is(.chip, .mark):is([data-review="pending"], [data-review="reverted"], [data-state="queued"], [data-flag="low_confidence"], [data-flag="repeated"], [data-removed="yes"], [data-stale="yes"]) { color: var(--text-2); }
+.chip[data-kind="hard"] { border-color: var(--line-control); color: var(--text); }
+.mark[data-kind="hard"] { color: var(--text); }
+.mark[data-kind="soft"] { color: var(--text-2); }
+.chip:is([data-kind="soft"], [data-in-revision="no"], [data-state="draft"]) { border-style: dashed; border-color: var(--line-control); }
+.chip:is([data-in-revision="no"], [data-state="draft"])::before { content: none; }
+
+/* «пройдено» / «НЕ пройдено» */
+.mark[data-ok="yes"]::before {
+  width: 5px; height: 9px; border: 0; border-radius: 0;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(45deg);
+}
+.mark[data-ok="no"] { font-weight: 500; }
+.mark[data-ok="no"]::before {
+  content: "×"; width: auto; height: auto; border: 0; border-radius: 0; font: 600 14px/1 var(--font-mono);
+}
+
+/* счётчик в разделе и группе */
+.count {
+  display: inline-flex; align-items: center; height: 18px; padding: 0 5px; border-radius: var(--radius-sm);
+  background: var(--surface-3); font: 500 var(--fs-12)/1 var(--font-mono); color: var(--text-2);
+}
+
+/* ── Ход задачи ─────────────────────────────────────────────────────── */
+.progress {
+  display: block; height: 4px; border-radius: 2px; background: var(--surface-3); overflow: hidden;
+}
+.progress > span { display: block; height: 100%; background: var(--accent); transition: width var(--dur); }
+.job-status { display: inline-flex; flex-direction: column; gap: 2px; min-width: 0; }
+.job-status-line { display: inline-flex; align-items: center; gap: var(--sp-2); }
+.job-status-line .progress { width: 140px; }
+.job-status-note { font: 400 var(--fs-12) var(--font-mono); color: var(--text-3); }
+.job-status[data-state="failed"] .job-status-note { color: var(--danger); }
+
+/* ── Плеер ──────────────────────────────────────────────────────────── */
+.player { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+.player-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); }
+.player-head h3, .player-head h2 { font-size: var(--fs-13); font-weight: 500; }
+.player-head span { font: 400 var(--fs-12) var(--font-mono); color: var(--text-3); }
+.video-frame {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg);
+  display: grid; place-items: center;
+}
+.video-frame video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+.video-frame[data-empty] {
+  background: repeating-linear-gradient(135deg, var(--surface-1) 0 10px, var(--bg) 10px 20px);
+  font: 400 var(--fs-12) var(--font-mono); color: var(--text-3);
+}
+.video-frame.pending {
+  border-style: dashed; border-color: var(--line-strong); background: var(--surface-1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--sp-3); padding: var(--sp-4); text-align: center; font-size: var(--fs-13); color: var(--text-2);
+}
+.video-frame.pending[data-state="running"], .video-frame.pending[data-state="error"] { border-style: solid; border-color: var(--line); }
+.video-frame.pending[data-state="error"] { align-items: flex-start; text-align: left; gap: var(--sp-2); }
+.video-frame.pending .progress { width: 70%; }
+.player-controls { display: flex; align-items: center; gap: var(--sp-3); height: var(--control-h); }
+.play-btn {
+  flex: none; width: 32px; height: 32px; display: grid; place-items: center; padding: 0;
+  border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--surface-2); cursor: pointer;
+  transition: background-color var(--dur);
+}
+.play-btn:hover { background: var(--surface-3); }
+.play-btn::before {
+  content: ""; width: 0; height: 0; margin-left: 2px;
+  border-left: 9px solid var(--text); border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+}
+.play-btn[aria-pressed="true"]::before {
+  width: 10px; height: 12px; margin: 0; border: 0;
+  background: linear-gradient(90deg, var(--text) 0 3px, transparent 3px 7px, var(--text) 7px 10px);
+}
+.player-time { flex: none; font: 400 var(--fs-12) var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text-2); }
+.player-time span { color: var(--text-3); }
+.scrub { position: relative; flex: 1; height: 24px; cursor: pointer; min-width: 60px; }
+.scrub-track, .scrub-fill { position: absolute; top: 10px; height: 4px; border-radius: 2px; }
+.scrub-track { left: 0; right: 0; background: var(--surface-3); }
+.scrub-fill { left: 0; background: var(--text-3); border-radius: 2px 0 0 2px; }
+.scrub-cut { position: absolute; top: 8px; height: 8px; border: 1px dashed var(--line-control); border-radius: 2px; }
+.scrub-joint { position: absolute; top: 6px; width: 2px; height: 12px; background: var(--text); }
+.scrub-head { position: absolute; top: 4px; width: 2px; height: 16px; margin-left: -1px; background: var(--accent); }
+
+/* ── Таблица ────────────────────────────────────────────────────────── */
+.table { width: 100%; border-collapse: collapse; }
+.table th {
+  height: 32px; padding: 0 var(--sp-3) 0 0; text-align: left; vertical-align: bottom; padding-bottom: 8px;
+  font-size: var(--fs-12); font-weight: 500; color: var(--text-3); border-bottom: 1px solid var(--line-strong);
+}
+.table td { padding: 10px var(--sp-3) 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.table tbody tr { transition: background-color var(--dur); }
+.table tbody tr:hover { background: var(--surface-1); }
+.table th:last-child, .table td:last-child { padding-right: 0; text-align: right; }
+
+/* ── Заголовки разделов ─────────────────────────────────────────────── */
+.section-title { font-size: var(--fs-16); font-weight: 600; line-height: 24px; }
+.block-title { font-size: var(--fs-13); font-weight: 500; }
+.group-title { font-size: var(--fs-12); font-weight: 500; color: var(--text-3); }
+.read { font-size: var(--fs-read); line-height: var(--lh-read); }
+
+/* ── Пусто, загрузка, ошибка ────────────────────────────────────────── */
+.state-panel {
+  display: flex; flex-direction: column; gap: var(--sp-3);
+  max-width: 680px; padding: 64px var(--sp-7);
+}
+.state-panel h2 { display: flex; align-items: center; gap: 10px; font-size: var(--fs-16); font-weight: 600; line-height: 24px; }
+.state-panel p { font-size: var(--fs-read); line-height: var(--lh-read); color: var(--text-2); }
+.state-panel[data-state="error"] h2::before {
+  content: ""; width: 8px; height: 8px; border-radius: 1px; background: var(--danger);
+}
+.error-box {
+  padding: 10px var(--sp-3); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+  font: 400 var(--fs-13)/1.5 var(--font-mono); color: var(--danger); white-space: pre-wrap;
+}
+.error-text {
+  display: flex; align-items: baseline; gap: var(--sp-2);
+  font-size: var(--fs-13); color: var(--danger);
+}
+.error-text::before {
+  content: ""; flex: none; width: 7px; height: 7px; border-radius: 1px; background: currentColor; transform: translateY(-1px);
+}
+.loading-line {
+  display: flex; align-items: center; gap: var(--sp-3); font-size: var(--fs-13); color: var(--text-2);
+}
+.loading-line .progress { width: 200px; }
+.skeleton { display: block; height: 12px; border-radius: 2px; background: var(--surface-2); }
+.skeleton.strong { background: var(--surface-3); }

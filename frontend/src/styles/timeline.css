@@ -1,0 +1,112 @@
+/* Таймлайн: макет «07 · Таймлайн» плюс дорожка видео над звуком. */
+.tl { min-height: 640px; }
+.tl-bar { min-height: 48px; }
+.tl-bar .select select { width: 180px; }
+.tl-stats { font-size: var(--fs-12); white-space: nowrap; }
+
+.tl-top {
+  flex: none; display: grid; grid-template-columns: 720px minmax(0, 1fr); gap: var(--sp-6);
+  padding: 20px var(--sp-4) 0;
+}
+.tl-player-head { display: flex; align-items: center; gap: var(--sp-3); }
+.tl-player .video-frame { width: 720px; height: 405px; }
+.tl-player .video-frame[data-empty] { padding: var(--sp-4); text-align: center; }
+.tl-player .player-controls { gap: var(--sp-3); }
+.tl-src { font-size: var(--fs-12); }
+.tl-player-note { margin-left: auto; font-size: var(--fs-12); }
+
+.tl-notes { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; max-height: 470px; overflow: auto; }
+.tl-list { display: flex; flex-direction: column; gap: 6px; }
+.tl-empty { font-size: var(--fs-13); }
+.tl-marks, .tl-comments { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.tl-marks li {
+  display: grid; grid-template-columns: 40px 80px minmax(0, 1fr) auto; gap: var(--sp-3); align-items: center;
+  min-height: 36px; border-bottom: 1px solid var(--line);
+}
+.tl-marker-name { font-size: var(--fs-12); font-weight: 500; color: var(--text); }
+.tl-marks li[data-in-revision="no"] .tl-marker-name { color: var(--text-3); }
+.tl-row-extra { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; font-size: var(--fs-12); min-width: 0; }
+.tl-row-extra .mono { font-size: var(--fs-12); }
+.tl-row-action { opacity: 0; transition: opacity var(--dur); }
+li:hover > .tl-row-action, .tl-row-action:focus-visible { opacity: 1; }
+.tl-comments li {
+  display: grid; grid-template-columns: 80px minmax(0, 1fr) auto; gap: var(--sp-3); align-items: baseline;
+  padding: 6px 0; border-bottom: 1px solid var(--line);
+}
+.tl-comments .time-link, .tl-dash { line-height: 24px; }
+.tl-dash { padding: 0 var(--sp-1); }
+.tl-comment-body { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; }
+.tl-comment-body p { font-size: var(--fs-14); line-height: 24px; }
+.tl-comments li:is([data-in-revision="no"], [data-state="resolved"]) .tl-comment-body p { color: var(--text-3); }
+.tl-comment-form { display: flex; gap: var(--sp-2); margin-top: var(--sp-2); }
+.tl-comment-form input { flex: 1; height: var(--control-h-sm); font-size: var(--fs-13); }
+
+.tl-whole { flex: 1; min-height: 260px; display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-5) var(--sp-4) var(--sp-4); }
+.tl-whole-head { display: flex; align-items: center; gap: var(--sp-4); }
+.tl-zoom { display: flex; gap: 2px; }
+.tl-zoom .btn { height: 24px; font-size: var(--fs-12); }
+.tl-legend { margin-left: auto; display: flex; gap: 20px; font-size: var(--fs-12); color: var(--text-3); }
+.tl-legend li { display: flex; align-items: center; gap: 6px; }
+.lg-video { width: 18px; height: 10px; border-radius: 1px; background: linear-gradient(90deg, var(--surface-4) 0 8px, transparent 8px 10px, var(--surface-4) 10px); }
+.lg-wave { width: 14px; height: 10px; background: repeating-linear-gradient(90deg, var(--text-2) 0 2px, transparent 2px 4px); }
+.lg-joint { width: 1px; height: 12px; background: var(--line-control); }
+.lg-comment { width: 0; height: 12px; border-left: 1px dashed var(--text-2); }
+.lg-mark { padding: 0 3px; font: 500 var(--fs-12)/16px var(--font-mono); color: var(--text); background: var(--surface-3); border-radius: 2px; }
+.lg-cursor { width: 2px; height: 12px; background: var(--accent); }
+.tl-canvas-box {
+  flex: 1; min-height: 200px; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface-1); overflow: hidden auto; /* дорожки выше коробки — прокрутка */
+}
+/* Цвет волны звука = color холста */
+.tl-canvas { width: 100%; height: 100%; color: var(--text-2); cursor: pointer; }
+.tl-canvas:focus-visible { outline-offset: -2px; }
+.tl-foot { font-size: var(--fs-12); }
+
+.tl-loading { gap: var(--sp-4); padding: var(--sp-5) var(--sp-4); }
+.tl-loading .tl-canvas-box { flex: none; height: 320px; }
+.tl-row-extra:empty { display: none; }
+.tl-chapter-chip { color: var(--text); border-color: var(--line-control); }
+.tl-chapter-title { color: var(--text); font-weight: 500; }
+.lg-shot { width: 18px; height: 3px; background: linear-gradient(90deg, var(--text) 0 9px, var(--accent) 9px); }
+.lg-graphic { width: 18px; height: 10px; border: 1px solid var(--warn); background: color-mix(in srgb, var(--warn) 30%, transparent); }
+
+/* Ручной монтаж как в Premiere: инструменты, справка по клавишам, строка состояния */
+.tl-tools { margin-left: auto; display: flex; gap: 2px; }
+.tl-tools .btn { gap: 6px; }
+.tl-tools .btn[aria-pressed="true"] { background: var(--surface-4); color: var(--text); }
+.tl-tools kbd { font-size: 11px; }
+.tl-keys { position: relative; font-size: var(--fs-12); color: var(--text-3); }
+.tl-keys summary { cursor: pointer; list-style: none; white-space: nowrap; padding: 4px 8px; border-radius: var(--radius); }
+.tl-keys summary::-webkit-details-marker { display: none; }
+.tl-keys[open] summary, .tl-keys summary:hover { background: var(--surface-3); color: var(--text); }
+.tl-keys dl {
+  position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; width: 460px;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 14px; padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-2); border: 1px solid var(--line-control); border-radius: var(--radius);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .35);
+}
+.tl-keys dt { white-space: nowrap; color: var(--text); }
+.tl-keys dd { color: var(--text-2); }
+.tl-note { flex: 1; min-width: 0; font-size: var(--fs-12); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Монитор программы (как в Premiere): кадр как в ролике и рамки, которые двигаются мышью */
+.mon-frame { position: relative; overflow: hidden; background: #000; }
+.mon-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* color-scheme как у окна графики: иначе Chrome заливает окно непрозрачным фоном */
+.mon-graphic { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; background: transparent; color-scheme: normal; }
+.mon-src { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.mon-edit { position: absolute; inset: 0; }
+.mon-box { position: absolute; border: 1px dashed rgba(255, 255, 255, .55); cursor: move; touch-action: none; }
+.mon-box:hover, .mon-box[data-active] { border: 1px solid var(--accent); box-shadow: 0 0 0 1px rgba(0, 0, 0, .4); }
+.mon-tag { position: absolute; left: 0; top: 0; padding: 1px 6px; font-size: 11px; color: #fff; background: rgba(0, 0, 0, .6); pointer-events: none; }
+.mon-box[data-active] .mon-tag { background: var(--accent); }
+.mon-size { position: absolute; right: -6px; bottom: -6px; width: 12px; height: 12px; background: var(--accent); border: 1px solid #fff; cursor: nwse-resize; }
+.mon-box:not(:hover):not([data-active]) .mon-size { opacity: 0; }
+.mon-layers { display: flex; gap: 2px; margin-left: auto; }
+.mon-layers .btn[aria-pressed="true"] { background: var(--surface-4); color: var(--text); }
+.mon-hint { margin-left: auto; display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-12); color: var(--text-2); }
+/* В строке с ▶ и временем: занимает остаток строки, высота строки не меняется */
+.mon-fields { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-12); }
+.mon-fields > span { white-space: nowrap; }
+.mon-fields input { flex: 1; min-width: 0; height: var(--control-h-sm); font-size: var(--fs-13); }
+

@@ -1,0 +1,31 @@
+/* Экран «Задачи» (макет 11): исполнитель и таблица фоновых задач. */
+.jobs-screen { display: flex; flex-direction: column; gap: 20px; padding: 28px var(--sp-5) var(--sp-7); }
+.jobs-head { display: flex; align-items: center; gap: var(--sp-4); }
+.jobs-worker { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-13); color: var(--text-2); }
+
+.jobs-alert {
+  display: flex; flex-direction: column; gap: var(--sp-2); max-width: 720px;
+  padding: var(--sp-4); background: var(--surface-1); border: 1px solid var(--line-strong); border-radius: var(--radius);
+}
+.jobs-alert p { font-size: var(--fs-14); line-height: 1.6; color: var(--text-2); }
+.jobs-alert .jobs-alert-title { font-weight: 500; line-height: 1.43; color: var(--text); }
+.jobs-alert kbd { color: var(--text-2); }
+.jobs-alert code { font-size: var(--fs-13); color: var(--text); white-space: nowrap; }
+
+.jobs-table { font-variant-numeric: tabular-nums; }
+.jobs-table th { padding: 0 var(--sp-3) 8px; }
+.jobs-table td { height: 52px; padding: var(--sp-2) var(--sp-3); vertical-align: middle; }
+.jobs-table :is(th, td):first-child { padding-left: 0; }
+.jobs-table :is(th, td):last-child { padding-right: 0; }
+.jobs-col-state { width: 360px; }
+.jobs-table .jobs-col-tries { width: 88px; text-align: right; }
+.jobs-col-act { width: 96px; }
+.jobs-purpose { color: var(--text-2); }
+.jobs-table .job-status { gap: var(--sp-1); }
+.jobs-table .job-status-line { gap: var(--sp-3); }
+.jobs-table .job-status .mark { gap: 6px; font-weight: 500; }
+
+/* ── Загрузка ───────────────────────────────────────────────────────── */
+.jobs-state { display: flex; flex-direction: column; gap: var(--sp-3); padding: 28px var(--sp-5); }
+.jobs-state > p { font-size: var(--fs-13); color: var(--text-2); }
+.jobs-sk-row { display: block; height: 52px; border-bottom: 1px solid var(--line); }

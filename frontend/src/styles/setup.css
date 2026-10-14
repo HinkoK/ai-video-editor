@@ -1,0 +1,144 @@
+/* Экран «Проект» (макет 09): слева файлы, бриф, защищённые места; справа —
+   как Claude вносит правки, хранилище, как запустить Claude. */
+.setup-screen {
+  display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 40px; align-items: start;
+  padding: 28px var(--sp-5) var(--sp-7);
+}
+.setup-col { display: flex; flex-direction: column; gap: 40px; min-width: 0; }
+.setup-col > .setup-brief, .setup-col > .setup-prot { padding-top: var(--sp-6); border-top: 1px solid var(--line); }
+
+.setup-note { font-size: var(--fs-13); color: var(--text-2); }
+.setup-note code { font-size: var(--fs-12); color: var(--text); }
+.setup-head { display: flex; align-items: baseline; gap: var(--sp-3); }
+.setup-head > p { font-size: var(--fs-13); color: var(--text-3); }
+.setup-head-split { justify-content: space-between; }
+
+/* ── Файлы ──────────────────────────────────────────────────────────── */
+.setup-files { display: flex; flex-direction: column; gap: var(--sp-4); }
+.setup-add-wrap { display: flex; flex-direction: column; gap: var(--sp-2); }
+.setup-add { display: flex; align-items: flex-end; gap: var(--sp-2); }
+.setup-add .field { flex: 1; }
+
+.setup-assets { font-variant-numeric: tabular-nums; }
+.setup-assets th { padding: 0 var(--sp-3) 8px; white-space: nowrap; }
+.setup-assets td { padding: 14px var(--sp-3); }
+.setup-assets td.mono { white-space: nowrap; }
+.setup-assets :is(th, td):first-child { padding-left: 0; }
+.setup-assets th:last-child { padding-right: 0; text-align: left; }
+.setup-assets td:last-child { padding: 10px 0 10px var(--sp-3); text-align: left; }
+.setup-asset { display: flex; flex-direction: column; gap: 2px; }
+.setup-asset-ref { margin-right: var(--sp-2); color: var(--text-3); }
+/* Длинный путь — не больше двух строк, полный путь в подсказке */
+.setup-asset-path {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+  font-size: var(--fs-12); color: var(--text-3); overflow-wrap: anywhere;
+}
+/* Кнопки подготовки не переносятся: строка таблицы не ломается */
+.setup-prep { display: grid; grid-template-columns: auto auto; justify-content: start; gap: var(--sp-2) var(--sp-3); align-items: center; }
+.setup-prep .btn { justify-self: start; }
+.setup-prep .mark { gap: 6px; font-size: var(--fs-12); font-weight: 500; white-space: nowrap; }
+.setup-prep .job-status-line { gap: 10px; }
+.setup-prep .job-status-line .progress { width: 96px; }
+
+.setup-first { display: flex; align-items: center; gap: var(--sp-4); padding-top: var(--sp-1); }
+.setup-first .btn { padding: 0 14px; }
+.setup-first p { font-size: var(--fs-13); color: var(--text-2); }
+
+/* ── Бриф ───────────────────────────────────────────────────────────── */
+.setup-brief { display: flex; flex-direction: column; gap: var(--sp-4); }
+.setup-brief-head { display: flex; align-items: center; gap: var(--sp-3); }
+.setup-brief-form { display: flex; flex-direction: column; gap: var(--sp-4); }
+.setup-brief-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4) 20px; }
+.setup-brief-grid .wide { grid-column: 1 / -1; }
+/* Черновик Claude: у выпадающего списка тоже пунктир; в фокусе — сплошная рамка */
+.setup-brief .field[data-state="draft"] select { border-style: dashed; background: transparent; }
+.setup-brief .field[data-state="draft"] :is(input, textarea, select):focus { border-style: solid; }
+.setup-actions { display: flex; gap: var(--sp-2); }
+
+/* ── Защищённые места ───────────────────────────────────────────────── */
+.setup-prot { display: flex; flex-direction: column; gap: var(--sp-3); }
+.setup-prot-table { font-variant-numeric: tabular-nums; }
+.setup-prot-table th { padding: 0 var(--sp-3) 8px; }
+.setup-prot-table td { height: 40px; padding: 0 var(--sp-3); vertical-align: middle; }
+.setup-prot-table :is(th, td):first-child { padding-left: 0; }
+.setup-prot-table :is(th, td):last-child { padding-right: 0; }
+.setup-prot-table .mark { gap: 6px; font-weight: 500; }
+.setup-prot-table .mark[data-kind="hard"] { color: var(--text); }
+.setup-prot-table .mark[data-kind="soft"] { color: var(--text-2); }
+.setup-range { font-size: var(--fs-13); }
+.setup-who { color: var(--text-2); }
+
+.setup-prot-add { display: flex; flex-direction: column; gap: var(--sp-2); padding-top: var(--sp-3); }
+.setup-prot-fields {
+  display: grid; grid-template-columns: minmax(0, 180px) 112px 112px minmax(0, 1fr) auto;
+  gap: var(--sp-2); align-items: end;
+}
+
+/* ── Как Claude вносит правки ───────────────────────────────────────── */
+.setup-mode { display: flex; flex-direction: column; gap: var(--sp-2); }
+.setup-mode legend { margin-bottom: var(--sp-4); }
+.setup-mode-card {
+  display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: var(--sp-3);
+  padding: var(--sp-3); border: 1px solid var(--line-strong); border-radius: var(--radius);
+  cursor: pointer; transition: border-color var(--dur), background-color var(--dur);
+}
+.setup-mode-card:hover { background: var(--surface-2); }
+.setup-mode-card:has(input:checked) { border-color: var(--accent); background: var(--surface-2); }
+.setup-mode-card:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.setup-mode-card input { margin-top: 2px; }
+.setup-mode-text { display: flex; flex-direction: column; gap: var(--sp-1); }
+.setup-mode-title { font-size: var(--fs-14); font-weight: 500; }
+.setup-mode-desc { font-size: var(--fs-13); line-height: 1.5; color: var(--text-2); }
+
+/* ── Хранилище ──────────────────────────────────────────────────────── */
+.setup-storage { display: flex; flex-direction: column; gap: var(--sp-3); }
+.setup-storage-total { font-size: var(--fs-13); color: var(--text-2); }
+.setup-storage-warn {
+  display: flex; align-items: flex-start; gap: var(--sp-2);
+  padding: 10px var(--sp-3); border: 1px solid var(--line-strong); border-radius: var(--radius);
+  font-size: var(--fs-13); line-height: 1.5;
+}
+.setup-storage-warn::before {
+  content: ""; flex: none; width: 0; height: 0; margin-top: 5px;
+  border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 7px solid var(--warn);
+}
+.setup-storage-warn strong { font-weight: 500; color: var(--warn); }
+.setup-storage-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.setup-storage-list li {
+  display: grid; grid-template-columns: minmax(0, 1fr) 72px 88px; gap: var(--sp-3); align-items: center;
+  min-height: 44px; padding: 6px 0; border-bottom: 1px solid var(--line);
+}
+.setup-storage-name { display: flex; flex-direction: column; }
+.setup-storage-note { font-size: var(--fs-12); color: var(--text-3); }
+.setup-storage-size { font-size: var(--fs-13); text-align: right; }
+.setup-storage-act { justify-self: end; }
+
+/* ── Как запустить Claude ───────────────────────────────────────────── */
+.setup-run { display: flex; flex-direction: column; gap: var(--sp-3); }
+.setup-command {
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: 6px 6px 6px var(--sp-3); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.setup-command code { flex: 1; min-width: 0; font: 400 var(--fs-13)/20px var(--font-mono); overflow-wrap: anywhere; }
+
+/* ── Загрузка и пусто ───────────────────────────────────────────────── */
+.setup-state { display: flex; flex-direction: column; gap: var(--sp-4); padding: 28px var(--sp-5); }
+.setup-state > p { font-size: var(--fs-13); color: var(--text-2); }
+.setup-sk-title { width: 120px; height: 14px; }
+.setup-sk-field { display: block; height: 32px; border-radius: var(--radius); background: var(--surface-2); }
+.setup-sk-row { display: block; height: 56px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-1); }
+.setup-empty .state-panel { max-width: 760px; }
+.setup-empty .setup-add-wrap { margin-top: var(--sp-2); }
+
+/* ── Камера: роль и синхронизация ───────────────────────────────────── */
+.setup-add-role { flex: none; width: 240px; }
+.setup-add-role .select { width: 100%; }
+.setup-asset-role { margin-left: var(--sp-2); vertical-align: 1px; }
+.setup-sync { display: flex; flex-direction: column; gap: 2px; margin-top: var(--sp-1); }
+.setup-sync-text { font-size: var(--fs-12); color: var(--text-2); }
+.setup-sync[data-state="ok"] .setup-sync-text, .setup-sync[data-state="manual"] .setup-sync-text { color: var(--ok); }
+.setup-sync:is([data-state="weak"], [data-state="failed"]) .setup-sync-text { color: var(--warn); }
+.setup-sync-actions { display: flex; gap: 2px; margin-left: calc(-1 * var(--sp-2)); }
+.setup-sync-actions .btn { height: 24px; font-size: var(--fs-12); }
+.setup-layout-opts { display: flex; gap: var(--sp-2); margin-top: var(--sp-2); }
+.setup-layout-opts .select select { width: 150px; }

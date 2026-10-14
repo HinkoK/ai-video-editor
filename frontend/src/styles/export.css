@@ -1,0 +1,91 @@
+/* Экран «Экспорт» (макет 10): слева запуск экспорта и отчёты, справа —
+   проверка человеком последнего отчёта. */
+.export-screen {
+  display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 40px; align-items: start;
+  padding: 28px var(--sp-5) var(--sp-7);
+}
+.export-col { display: flex; flex-direction: column; gap: var(--sp-6); min-width: 0; }
+
+/* ── Запуск ─────────────────────────────────────────────────────────── */
+.export-run { display: flex; flex-direction: column; gap: var(--sp-4); }
+.export-run-row { display: flex; align-items: center; gap: var(--sp-4); }
+.export-hint { font-size: var(--fs-13); color: var(--text-3); }
+.export-task {
+  display: grid; grid-template-columns: minmax(0, 1fr) 260px auto; gap: var(--sp-5); align-items: center;
+  padding: var(--sp-3) var(--sp-4); background: var(--surface-1); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.export-task-name { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.export-task-note { font-size: var(--fs-12); color: var(--text-3); }
+.export-task-progress { display: flex; align-items: center; justify-content: flex-end; gap: var(--sp-3); }
+.export-task-progress .progress { flex: 1; }
+.export-task-progress .mark { gap: 6px; font-weight: 500; }
+.export-failed { display: flex; flex-direction: column; gap: var(--sp-2); }
+.export-failed h3 { display: flex; align-items: center; gap: 10px; font-size: var(--fs-14); font-weight: 600; }
+.export-failed h3::before { content: ""; width: 8px; height: 8px; border-radius: 1px; background: var(--danger); }
+.export-failed p { font-size: var(--fs-13); color: var(--text-2); }
+.export-link {
+  padding: 0; border: 0; background: none; font: inherit; color: var(--accent); cursor: pointer;
+}
+.export-link:hover { text-decoration: underline; }
+
+/* ── Отчёт ──────────────────────────────────────────────────────────── */
+.export-report { display: flex; flex-direction: column; gap: var(--sp-4); padding-top: 28px; border-top: 1px solid var(--line); }
+.export-report-head { display: flex; flex-direction: column; gap: var(--sp-2); }
+.export-report-title { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.export-report-file { font-size: var(--fs-12); color: var(--text-3); overflow-wrap: anywhere; }
+.export-block { display: flex; flex-direction: column; gap: var(--sp-2); }
+.export-sub { font-size: var(--fs-13); font-weight: 500; color: var(--text-2); }
+
+.export-checks { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.export-checks li {
+  display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: var(--sp-3); align-items: start;
+  min-height: 40px; padding: 9px 0; border-bottom: 1px solid var(--line);
+}
+/* Галочка или × — по высоте первой строки названия */
+.export-checks li > .mark:first-child { justify-self: center; height: 20px; }
+.export-check-name { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: var(--fs-14); }
+.export-check-detail { font-size: var(--fs-12); color: var(--text-3); }
+.export-checks .mark.plain { line-height: 20px; font-weight: 500; }
+.export-checks .mark.plain::before { content: none; }
+/* Финальный отчёт: проверки в две колонки, без подробностей */
+.export-checks.compact { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--sp-6); }
+.export-checks.compact li { align-items: center; padding: 0; }
+.export-checks.compact li > .mark:first-child { height: auto; }
+
+.export-notes { display: flex; flex-direction: column; gap: 6px; }
+.export-notes li { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: var(--sp-3); align-items: baseline; }
+.export-notes .time-link { display: inline-block; }
+.export-none, .export-report-human { font-size: var(--fs-13); color: var(--text-2); }
+
+/* ── Проверка человеком ─────────────────────────────────────────────── */
+.export-human {
+  display: flex; flex-direction: column; gap: var(--sp-3);
+  padding: var(--sp-4); background: var(--surface-1); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.export-human-form { display: flex; flex-direction: column; gap: var(--sp-3); }
+.export-human-for { font-size: var(--fs-13); color: var(--text-2); }
+.export-verdicts { display: flex; flex-direction: column; gap: var(--sp-2); }
+.export-verdicts label { display: flex; align-items: center; gap: 10px; min-height: 28px; font-size: var(--fs-14); cursor: pointer; }
+.export-human .mark.export-human-verdict { font-size: var(--fs-14); }
+.export-human-note { font-size: var(--fs-14); line-height: 1.6; color: var(--text-2); }
+.export-human-date { font-size: var(--fs-12); color: var(--text-3); }
+
+/* ── Загрузка ───────────────────────────────────────────────────────── */
+.export-state { display: flex; flex-direction: column; gap: var(--sp-4); padding: 28px var(--sp-5); }
+.export-state > p { font-size: var(--fs-13); color: var(--text-2); }
+.export-sk-button { display: block; width: 240px; height: 32px; border-radius: var(--radius); background: var(--surface-2); }
+.export-sk-title { width: 180px; height: 14px; margin-top: var(--sp-4); }
+.export-sk-row { display: block; height: 40px; border-bottom: 1px solid var(--line); }
+
+/* ── Для YouTube: субтитры и главы ──────────────────────────────────── */
+.export-side { display: flex; flex-direction: column; gap: var(--sp-5); min-width: 0; }
+.export-youtube { display: flex; flex-direction: column; gap: var(--sp-4); }
+.export-yt-part { display: flex; flex-direction: column; gap: var(--sp-2); }
+.export-yt-note { font-size: var(--fs-13); color: var(--text-3); }
+.export-yt-chapters {
+  padding: 10px var(--sp-3); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+  font-size: var(--fs-13); line-height: 1.6; color: var(--text); white-space: pre-wrap;
+}
+.export-yt-actions { display: flex; align-items: center; gap: var(--sp-3); }
+.export-yt-problems { display: flex; flex-direction: column; gap: 6px; }
+.export-yt-problems .mark { align-items: baseline; white-space: normal; }

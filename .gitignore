@@ -1,0 +1,28 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Секреты
+.env
+.env.*
+!.env.example
+
+# Медиа никогда не попадает в репозиторий
+*.mp4
+*.mov
+*.mkv
+*.m4a
+*.wav
+*.mp3
+*.aac
+
+# Фронтенд (появится на этапе 6)
+node_modules/
+dist/
+
+.DS_Store
+
+# Снимки сквозной проверки интерфейса
+ui-shots/

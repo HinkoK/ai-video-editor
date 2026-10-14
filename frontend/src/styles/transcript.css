@@ -1,0 +1,98 @@
+/* экран: transcript — «Монтаж · Таймлайн и Расшифровка», 08 */
+
+/* ── Строка под шапкой: файл, сведения о расшифровке, поиск ─────────── */
+.tr-bar { height: 56px; gap: 20px; }
+.tr-file {
+  display: flex; align-items: center; gap: var(--sp-2); flex: none;
+  font-size: var(--fs-12); color: var(--text-2);
+}
+.tr-file .select select { width: 200px; }
+.tr-info { min-width: 0; font-size: var(--fs-13); line-height: 18px; color: var(--text-2); }
+.tr-info .mono { color: var(--text); }
+.tr-search { margin-left: auto; flex: none; }
+.tr-search label { position: relative; display: flex; align-items: center; }
+.tr-search input { width: 280px; padding: 0 36px 0 10px; }
+.tr-search input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+.tr-search kbd { position: absolute; right: var(--sp-2); pointer-events: none; }
+
+/* ── Список фраз слева, лёгкая копия справа ─────────────────────────── */
+.tr-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 440px; }
+.tr-list { min-height: 0; display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+.tr-scroll { flex: 1; min-height: 0; overflow: auto; }
+/* Виртуальный список: высота — вся длина, строки на своих местах */
+.tr-rows { position: relative; }
+.tr-rows > .tr-row { position: absolute; top: 0; left: 0; width: 100%; }
+
+.tr-row {
+  display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: var(--sp-4); align-items: baseline;
+  padding: var(--sp-2) var(--sp-4); border-bottom: 1px solid var(--line);
+}
+.tr-row[aria-current="true"] { background: var(--surface-2); }
+.tr-phrase { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+/* Текст фразы: щелчок открывает исправление прямо в строке */
+.tr-text {
+  margin: 0 calc(-1 * var(--sp-1)); padding: 0 var(--sp-1);
+  border: 0; border-radius: var(--radius-sm); background: none; text-align: left;
+  font-size: var(--fs-read); line-height: var(--lh-read); color: var(--text); text-wrap: pretty;
+  cursor: text; transition: background-color var(--dur);
+}
+.tr-text:hover { background: var(--surface-2); }
+.tr-row[aria-current="true"] .tr-text:hover { background: var(--surface-3); }
+
+.tr-flags { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 360px; }
+.tr-orig { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-12); color: var(--text-3); }
+
+/* Исправление */
+.tr-edit { display: flex; flex-direction: column; gap: 6px; }
+.tr-edit label { display: flex; flex-direction: column; }
+.tr-edit textarea {
+  width: 100%; min-height: 36px; padding: 5px var(--sp-2);
+  border-color: var(--accent); font-size: var(--fs-read); line-height: var(--lh-read);
+  field-sizing: content;
+}
+.tr-edit-meta { display: flex; align-items: center; gap: var(--sp-3); font-size: var(--fs-12); color: var(--text-3); }
+.tr-edit-keys { margin-left: auto; flex: none; display: flex; align-items: center; gap: 6px; }
+.tr-edit-keys kbd:not(:first-child) { margin-left: var(--sp-2); }
+
+.tr-range {
+  flex: none; padding: var(--sp-2) var(--sp-4);
+  font: 400 var(--fs-12) var(--font-mono); color: var(--text-3);
+}
+
+.tr-side {
+  min-height: 0; overflow: auto; padding: 20px var(--sp-4);
+  display: flex; flex-direction: column; gap: var(--sp-2);
+}
+.tr-side-hint { margin-top: var(--sp-3); font-size: var(--fs-13); line-height: var(--lh-read); color: var(--text-2); }
+
+/* ── Найденное: заменяет список, пока в поле есть запрос ────────────── */
+.tr-found-head {
+  flex: none; display: flex; align-items: center; gap: var(--sp-3);
+  height: 48px; padding: 0 var(--sp-4); border-bottom: 1px solid var(--line); font-size: var(--fs-13);
+}
+.tr-found-head h3 { flex: none; font-size: var(--fs-13); font-weight: 500; }
+.tr-found-head .btn { margin-left: auto; }
+.tr-group {
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-4) var(--sp-4) var(--sp-2); border-bottom: 1px solid var(--line);
+}
+.tr-found .tr-text { cursor: pointer; }
+.tr-found mark { border-radius: 2px; background: var(--surface-4); color: var(--text); }
+.tr-found > .error-text { padding: var(--sp-3) var(--sp-4); }
+.tr-found-empty { padding: var(--sp-4); font-size: var(--fs-13); line-height: var(--lh-read); color: var(--text-2); }
+
+/* ── Загрузка, ошибка ───────────────────────────────────────────────── */
+.tr-loading {
+  height: 56px; flex: none; display: flex; align-items: center; padding: 0 var(--sp-4);
+  border-bottom: 1px solid var(--line); font-size: var(--fs-13); color: var(--text-2);
+}
+.tr-skel > div {
+  display: grid; grid-template-columns: 84px 1fr; gap: var(--sp-4);
+  padding: 14px var(--sp-4); border-bottom: 1px solid var(--line);
+}
+.tr-skel .skeleton.strong { width: 56px; }
+.tr-skel > div:nth-child(1) .skeleton:not(.strong) { width: 62%; }
+.tr-skel > div:nth-child(2) .skeleton:not(.strong) { width: 48%; }
+.tr-skel > div:nth-child(3) .skeleton:not(.strong) { width: 70%; }
+.tr-skel > div:nth-child(4) .skeleton:not(.strong) { width: 40%; }
+.tr-actions { display: flex; gap: var(--sp-2); margin-top: var(--sp-1); }

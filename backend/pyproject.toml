@@ -1,0 +1,34 @@
+[project]
+name = "longform"
+version = "0.1.0"
+description = "Ядро локального ИИ-редактора длинных видео"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.142.2",
+    "mcp>=2.3.0",
+    "numpy>=2.0",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+longform-server = "longform.server:main"
+longform-agent = "longform.agent.setup:main"
+longform-open = "longform.server:open_ui"
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.13.1",
+    "pytest>=8",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.15,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "media: тесты, которые запускают ffmpeg на синтетических роликах",
+    "slow: долгие тесты (замер двух способов склейки)",
+    "asr: тесты с настоящим whisper.cpp на синтетической речи",
+]
